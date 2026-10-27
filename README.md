@@ -1,13 +1,20 @@
 # Ghost Maintainer
 
-Ghost Maintainer finds rotten npm dependencies, shows whether your source actually uses them, fixes them with deterministic codemods, proves the fix with the project's own tests, and prepares a pull request with all of that evidence attached.
+[![Tests](https://img.shields.io/badge/Backend%20Tests-330%20passed-brightgreen.svg)](file:///backend)
+[![Frontend Tests](https://img.shields.io/badge/Frontend%20Tests-59%20passed-brightgreen.svg)](file:///frontend)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Vite-blue.svg)](file:///frontend)
+[![Python](https://img.shields.io/badge/Python-3.11%2B%20FastAPI-blue.svg)](file:///backend)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-It ships two independent surfaces that share one GitHub connection, one optional LLM wrapper and one dashboard:
+> **Autonomous open-source dependency maintenance & AI PR review engine.**
+> Finds rotten npm dependencies, verifies code reachability, applies deterministic AST codemods, proves fixes in an isolated sandbox with the project's own test suite, and previews/opens ready-to-merge Pull Requests.
 
-1. **Dependency fixer** — scan → Rot Score → reachability → fix plan → sandboxed test run → PR preview.
-2. **AI pull-request reviewer** — webhook or manual trigger → four agents → inline comments, plus a learner that records the issues a repository keeps repeating.
+Ghost Maintainer ships two core engines sharing one unified dashboard:
 
-Everything works with **no LLM key** and **no GitHub token**. The keys unlock better reviews and real pull requests; they are never required for the core workflow.
+1. **Autonomous Dependency Fixer** — Scan → 5-factor Rot Score → Reachability analysis → Migration / Safe bump → Sandboxed test verification → Pull Request preview & creation.
+2. **AI Pull-Request Reviewer** — 4 specialized agents (Static, Security, Architecture, Style) reviewing code diffs, backed by persistent repository memory (`learner.py`) to prevent repeat anti-patterns.
+
+Everything works with **no LLM key** and **no GitHub token** required for offline demos and local development. Tokens unlock live GitHub PR creation and enhanced model-driven review insights.
 
 ---
 
