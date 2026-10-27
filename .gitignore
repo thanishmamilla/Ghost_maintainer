@@ -1,0 +1,118 @@
+# ---------------------------------------------------------------------------
+# Secrets and environment
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# ---------------------------------------------------------------------------
+# Node / frontend
+# ---------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+.yarn/
+dist/
+dist-ssr/
+build/
+.vite/
+*.local
+*.tsbuildinfo
+.eslintcache
+coverage/
+.vercel/
+.netlify/
+
+# ---------------------------------------------------------------------------
+# Runtime artifacts produced by this application
+# ---------------------------------------------------------------------------
+# Sandbox working copies, cloned repositories and scan/fix scratch space.
+backend/.workspaces/
+.workspaces/
+# Repository-specific review memory written by the learner.
+learner.json
+# Captured API responses are committed on purpose; see backend/app/fixtures/.
+!backend/app/fixtures/
+
+# ---------------------------------------------------------------------------
+# Editors and IDEs
+# ---------------------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.project
+.settings/
+.classpath
+
+# ---------------------------------------------------------------------------
+# OS
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Misc
+# ---------------------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.zip
+tmp/
+temp/

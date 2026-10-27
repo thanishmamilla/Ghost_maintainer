@@ -1,0 +1,39 @@
+{
+ "name": "dayjs",
+ "dist-tags": {
+  "alpha": "2.0.0-alpha.4",
+  "latest": "1.11.23"
+ },
+ "time": {
+  "1.11.0": "2022-03-14T17:01:26.839Z",
+  "created": "2018-04-10T01:31:28.265Z",
+  "1.11.23": "2026-08-17T11:52:35.217Z",
+  "modified": "2026-08-17T11:52:35.546Z"
+ },
+ "repository": {
+  "url": "git+https://github.com/iamkun/dayjs.git",
+  "type": "git"
+ },
+ "license": "MIT",
+ "versions": {
+  "1.11.23": {
+   "version": "1.11.23",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git+https://github.com/iamkun/dayjs.git",
+    "type": "git"
+   }
+  },
+  "1.11.0": {
+   "version": "1.11.0",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git+https://github.com/iamkun/dayjs.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": null
+}

@@ -1,0 +1,30 @@
+{
+ "name": "semver",
+ "dist-tags": {
+  "legacy": "5.7.2",
+  "latest-6": "6.3.1",
+  "latest": "7.8.5"
+ },
+ "time": {
+  "modified": "2026-09-09T20:11:27.644Z",
+  "created": "2011-02-12T00:20:25.690Z",
+  "7.8.5": "2026-06-19T18:32:48.972Z"
+ },
+ "repository": {
+  "url": "git+https://github.com/npm/node-semver.git",
+  "type": "git"
+ },
+ "license": "ISC",
+ "versions": {
+  "7.8.5": {
+   "version": "7.8.5",
+   "deprecated": null,
+   "license": "ISC",
+   "repository": {
+    "url": "git+https://github.com/npm/node-semver.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": null
+}

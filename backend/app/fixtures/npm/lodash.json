@@ -1,0 +1,29 @@
+{
+ "name": "lodash",
+ "dist-tags": {
+  "latest": "4.18.1"
+ },
+ "time": {
+  "created": "2012-04-23T16:37:11.912Z",
+  "4.17.15": "2019-07-19T02:28:46.584Z",
+  "modified": "2026-10-26T00:57:23.356Z",
+  "4.18.1": "2026-04-01T21:01:20.458Z"
+ },
+ "repository": {
+  "url": "git+https://github.com/lodash/lodash.git",
+  "type": "git"
+ },
+ "license": "MIT",
+ "versions": {
+  "4.17.15": {
+   "version": "4.17.15",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git+https://github.com/lodash/lodash.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": null
+}

@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "swaps": {
+    "moment": {
+      "replacement": "dayjs",
+      "replacement_version": "1.11.23",
+      "summary": "Replace the abandoned `moment` library with `dayjs`, a smaller and actively maintained date library.",
+      "why": "`moment` is in maintenance mode: its GitHub project carries no recent release activity and it pulls a large locale bundle. `dayjs` is API-compatible for the formatting and arithmetic this repository uses.",
+      "supported_patterns": [
+        "import moment from \"moment\" / const moment = require(\"moment\")",
+        "moment(value)",
+        "moment().format(pattern)",
+        "moment(value).add(amount, unit)",
+        "moment(value).subtract(amount, unit)",
+        "moment(value).diff(other, unit)",
+        "moment(value).startOf(unit)"
+      ],
+      "unsupported_patterns": [
+        "moment.locale() and locale data loading",
+        "moment().calendar()",
+        "moment.weekday() without the weekday plugin",
+        "moment().toDate() chains that rely on moment-specific object mutation",
+        "moment.tz() and moment-timezone"
+      ],
+      "notes": [
+        "`dayjs` objects are immutable. `moment` objects are mutable, so a chained call such as `moment(x).add(1, 'day')` is safe to convert, but code that stores a moment and mutates it later is not.",
+        "Formatting tokens are identical for the tokens used here (YYYY, MM, DD, HH, mm, ss).",
+        "`add` and `subtract` accept the same unit strings in both libraries.",
+        "`diff` requires the `duration` plugin only for formatting; the numeric form used here works without plugins."
+      ],
+      "plugin_requirements": []
+    },
+    "request": {
+      "replacement": "axios",
+      "replacement_version": "1.20.0",
+      "summary": "Replace the deprecated `request` library with `axios`.",
+      "why": "`request` has carried an npm deprecation notice since 2020 and receives no maintenance. `axios` is actively maintained and returns a promise instead of a callback.",
+      "supported_patterns": [
+        "const request = require(\"request\")",
+        "request.get(url, callback) wrapped in a promise where the callback resolves the parsed JSON body",
+        "request.get(url, callback) wrapped in a promise where the callback resolves the raw body"
+      ],
+      "unsupported_patterns": [
+        "request.post / request.put / request.delete",
+        "multipart uploads and form encoding",
+        "piping request streams",
+        "callback style that expects `response` to be an http.IncomingMessage"
+      ],
+      "notes": [
+        "`axios` rejects on a non-2xx status by default, so the explicit status check in the original code is removed and the rejection is preserved through the promise.",
+        "`axios` parses JSON automatically. The response body is stringified back so that a caller doing `JSON.parse(body)` keeps working unchanged.",
+        "Only the promise-wrapped `request.get` shape is rewritten. Any other use of `request` is reported as `needs_human_review` rather than rewritten."
+      ],
+      "plugin_requirements": []
+    },
+    "left-pad": {
+      "replacement": "String.prototype.padStart",
+      "replacement_version": null,
+      "summary": "Replace `left-pad` with the built-in `String.prototype.padStart`.",
+      "why": "`left-pad` is a single-function package that the language now provides natively.",
+      "supported_patterns": [
+        "leftPad(value, length, padding)"
+      ],
+      "unsupported_patterns": [
+        "custom padding characters longer than one code point"
+      ],
+      "notes": [
+        "Not implemented as an automatic codemod: the replacement changes the call shape and needs a human to confirm the padding argument order."
+      ],
+      "plugin_requirements": []
+    },
+    "querystring": {
+      "replacement": "URLSearchParams",
+      "replacement_version": null,
+      "summary": "Replace the `querystring` module with the built-in `URLSearchParams`.",
+      "why": "The `querystring` module is deprecated in favour of the WHATWG URL standard.",
+      "supported_patterns": [
+        "querystring.parse(input)",
+        "querystring.stringify(object)"
+      ],
+      "unsupported_patterns": [
+        "nested object serialisation"
+      ],
+      "notes": [
+        "Not implemented as an automatic codemod: the two APIs differ in escaping and nesting behaviour."
+      ],
+      "plugin_requirements": []
+    }
+  }
+}

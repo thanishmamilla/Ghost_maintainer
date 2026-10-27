@@ -1,0 +1,19 @@
+# Normalise line endings so the repository behaves the same on Windows, macOS and Linux.
+* text=auto eol=lf
+
+# PowerShell scripts are CRLF for maximum compatibility with Windows PowerShell 5.1.
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary assets must never be normalised.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# Lockfiles are generated; keep them as-is.
+package-lock.json -diff linguist-generated

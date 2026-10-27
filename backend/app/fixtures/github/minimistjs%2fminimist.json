@@ -1,0 +1,19 @@
+{
+ "full_name": "minimistjs/minimist",
+ "archived": false,
+ "disabled": false,
+ "pushed_at": "2025-12-30T01:57:54Z",
+ "updated_at": "2026-10-12T07:15:35Z",
+ "html_url": "https://github.com/minimistjs/minimist",
+ "default_branch": "main",
+ "stargazers_count": 663,
+ "open_issues_count": 16,
+ "archived_at": null,
+ "license": {
+  "key": "mit",
+  "name": "MIT License",
+  "spdx_id": "MIT",
+  "url": "https://api.github.com/licenses/mit",
+  "node_id": "MDc6TGljZW5zZTEz"
+ }
+}

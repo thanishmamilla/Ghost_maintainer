@@ -1,0 +1,13 @@
+{
+  "captured_at": "manual",
+  "packages": [
+    "axios",
+    "dayjs",
+    "jsonwebtoken",
+    "lodash",
+    "minimist",
+    "moment",
+    "request",
+    "semver"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+ "name": "minimist",
+ "dist-tags": {
+  "latest": "1.2.8",
+  "0.2-backport": "0.2.4"
+ },
+ "time": {
+  "created": "2013-06-25T08:17:16.343Z",
+  "modified": "2026-03-06T07:15:54.567Z",
+  "1.2.0": "2015-08-24T13:56:27.640Z",
+  "1.2.8": "2023-02-09T20:59:49.233Z"
+ },
+ "repository": {
+  "url": "git://github.com/minimistjs/minimist.git",
+  "type": "git"
+ },
+ "license": "MIT",
+ "versions": {
+  "1.2.0": {
+   "version": "1.2.0",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git://github.com/substack/minimist.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": null
+}

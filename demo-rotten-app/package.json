@@ -1,0 +1,24 @@
+{
+  "name": "demo-rotten-app",
+  "version": "0.4.2",
+  "private": true,
+  "description": "Deliberately rotten Node.js app used to demonstrate Ghost Maintainer.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "jsonwebtoken": "3.2.2",
+    "lodash": "4.17.15",
+    "minimist": "1.2.0",
+    "moment": "2.29.1",
+    "request": "2.88.2",
+    "semver": "7.8.5"
+  },
+  "devDependencies": {
+    "jest": "30.5.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

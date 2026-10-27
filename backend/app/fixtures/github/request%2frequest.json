@@ -1,0 +1,19 @@
+{
+ "full_name": "request/request",
+ "archived": false,
+ "disabled": false,
+ "pushed_at": "2024-08-14T00:09:41Z",
+ "updated_at": "2026-10-25T01:59:45Z",
+ "html_url": "https://github.com/request/request",
+ "default_branch": "master",
+ "stargazers_count": 25487,
+ "open_issues_count": 145,
+ "archived_at": null,
+ "license": {
+  "key": "apache-2.0",
+  "name": "Apache License 2.0",
+  "spdx_id": "Apache-2.0",
+  "url": "https://api.github.com/licenses/apache-2.0",
+  "node_id": "MDc6TGljZW5zZTI="
+ }
+}

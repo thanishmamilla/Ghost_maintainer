@@ -1,0 +1,19 @@
+{
+ "full_name": "lodash/lodash",
+ "archived": false,
+ "disabled": false,
+ "pushed_at": "2026-10-01T23:04:09Z",
+ "updated_at": "2026-10-26T07:02:54Z",
+ "html_url": "https://github.com/lodash/lodash",
+ "default_branch": "main",
+ "stargazers_count": 61279,
+ "open_issues_count": 123,
+ "archived_at": null,
+ "license": {
+  "key": "other",
+  "name": "Other",
+  "spdx_id": "NOASSERTION",
+  "url": null,
+  "node_id": "MDc6TGljZW5zZTA="
+ }
+}

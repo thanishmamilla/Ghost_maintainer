@@ -1,0 +1,29 @@
+{
+ "name": "moment",
+ "dist-tags": {
+  "latest": "2.31.0"
+ },
+ "time": {
+  "created": "2011-10-17T20:04:22.876Z",
+  "2.31.0": "2026-09-15T01:07:26.131Z",
+  "modified": "2026-09-15T01:07:26.443Z",
+  "2.29.1": "2020-10-06T11:21:28.627Z"
+ },
+ "repository": {
+  "url": "github:moment/moment",
+  "type": "git"
+ },
+ "license": "MIT",
+ "versions": {
+  "2.29.1": {
+   "version": "2.29.1",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git+https://github.com/moment/moment.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": null
+}

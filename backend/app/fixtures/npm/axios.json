@@ -1,0 +1,41 @@
+{
+ "name": "axios",
+ "dist-tags": {
+  "next": "1.7.0-beta.2",
+  "old-version": "0.30.0",
+  "latest": "1.20.0",
+  "v0x": "0.34.0"
+ },
+ "time": {
+  "0.27.2": "2022-04-27T10:00:58.685Z",
+  "1.20.0": "2026-08-26T08:20:14.517Z",
+  "modified": "2026-09-18T13:53:57.367Z",
+  "created": "2014-08-29T23:08:36.810Z"
+ },
+ "repository": {
+  "url": "git+https://github.com/axios/axios.git",
+  "type": "git"
+ },
+ "license": "MIT",
+ "versions": {
+  "1.20.0": {
+   "version": "1.20.0",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git+https://github.com/axios/axios.git",
+    "type": "git"
+   }
+  },
+  "0.27.2": {
+   "version": "0.27.2",
+   "deprecated": null,
+   "license": "MIT",
+   "repository": {
+    "url": "git+https://github.com/axios/axios.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": null
+}

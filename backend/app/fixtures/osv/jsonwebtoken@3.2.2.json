@@ -1,0 +1,303 @@
+{
+ "vulns": [
+  {
+   "id": "GHSA-8cf7-32gw-wr33",
+   "summary": "jsonwebtoken unrestricted key type could lead to legacy keys usage ",
+   "details": "# Overview\n\nVersions `<=8.5.1` of `jsonwebtoken` library could be misconfigured so that legacy, insecure key types are used for signature verification. For example, DSA keys could be used with the RS256 algorithm. \n\n# Am I affected?\n\nYou are affected if you are using an algorithm and a key type other than the combinations mentioned below\n\n| Key type |  algorithm                                    |\n|----------|------------------------------------------|\n| ec           | ES256, ES384, ES512                      |\n| rsa          | RS256, RS384, RS512, PS256, PS384, PS512 |\n| rsa-pss  | PS256, PS384, PS512                      |\n\nAnd for Elliptic Curve algorithms:\n\n| `alg` | Curve      |\n|-------|------------|\n| ES256 | prime256v1 |\n| ES384 | secp384r1  |\n| ES512 | secp521r1  |\n\n# How do I fix it?\n\nUpdate to version 9.0.0. This version validates for asymmetric key type and algorithm combinations. Please refer to the above mentioned algorithm / key type combinations for the valid secure configuration. After updating to version 9.0.0, If you still intend to continue with signing or verifying tokens using invalid key type/algorithm value combinations, you\u2019ll need to set the `allowInvalidAsymmetricKeyTypes` option to `true` in the `sign()` and/or `verify()` functions.\n\n# Will the fix impact my users?\n\nThere will be no impact, if you update to version 9.0.0 and you already use a valid secure combination of key type and algorithm. Otherwise,  use the  `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and `verify()` functions to continue usage of invalid key type/algorithm combination in 9.0.0 for legacy compatibility. \n\n",
+   "aliases": [
+    "CVE-2022-23539"
+   ],
+   "modified": "2024-06-24T21:23:38Z",
+   "published": "2022-12-22T03:32:22Z",
+   "database_specific": {
+    "github_reviewed": true,
+    "github_reviewed_at": "2022-12-22T03:32:22Z",
+    "nvd_published_at": "2022-12-23T00:15:00Z",
+    "cwe_ids": [
+     "CWE-327"
+    ],
+    "severity": "HIGH"
+   },
+   "references": [
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-8cf7-32gw-wr33"
+    },
+    {
+     "type": "ADVISORY",
+     "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-23539"
+    },
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3"
+    },
+    {
+     "type": "PACKAGE",
+     "url": "https://github.com/auth0/node-jsonwebtoken"
+    },
+    {
+     "type": "WEB",
+     "url": "https://security.netapp.com/advisory/ntap-20240621-0007"
+    }
+   ],
+   "affected": [
+    {
+     "package": {
+      "name": "jsonwebtoken",
+      "ecosystem": "npm",
+      "purl": "pkg:npm/jsonwebtoken"
+     },
+     "ranges": [
+      {
+       "type": "SEMVER",
+       "events": [
+        {
+         "introduced": "0"
+        },
+        {
+         "fixed": "9.0.0"
+        }
+       ]
+      }
+     ],
+     "database_specific": {
+      "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/12/GHSA-8cf7-32gw-wr33/GHSA-8cf7-32gw-wr33.json",
+      "last_known_affected_version_range": "<= 8.5.1"
+     }
+    }
+   ],
+   "schema_version": "1.9.0",
+   "severity": [
+    {
+     "type": "CVSS_V3",
+     "score": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N"
+    }
+   ]
+  },
+  {
+   "id": "GHSA-c7hr-j4mj-j2w6",
+   "summary": "Verification Bypass in jsonwebtoken",
+   "details": "Versions 4.2.1 and earlier of `jsonwebtoken` are affected by a verification bypass vulnerability. This is a result of weak validation of the JWT algorithm type, occuring when an attacker is allowed to arbitrarily specify the JWT algorithm.\n\n\n\n\n## Recommendation\n\nUpdate to version 4.2.2 or later.",
+   "aliases": [
+    "CVE-2015-9235"
+   ],
+   "modified": "2026-09-10T03:48:15.346337398Z",
+   "published": "2018-10-09T00:38:30Z",
+   "database_specific": {
+    "cwe_ids": [
+     "CWE-20"
+    ],
+    "severity": "CRITICAL",
+    "github_reviewed": true,
+    "github_reviewed_at": "2020-06-16T21:30:27Z",
+    "nvd_published_at": null
+   },
+   "references": [
+    {
+     "type": "ADVISORY",
+     "url": "https://nvd.nist.gov/vuln/detail/CVE-2015-9235"
+    },
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/commit/1bb584bc382295eeb7ee8c4452a673a77a68b687"
+    },
+    {
+     "type": "WEB",
+     "url": "https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries"
+    },
+    {
+     "type": "ADVISORY",
+     "url": "https://github.com/advisories/GHSA-c7hr-j4mj-j2w6"
+    },
+    {
+     "type": "WEB",
+     "url": "https://www.npmjs.com/advisories/17"
+    },
+    {
+     "type": "WEB",
+     "url": "https://www.timmclean.net/2015/02/25/jwt-alg-none.html"
+    }
+   ],
+   "affected": [
+    {
+     "package": {
+      "name": "jsonwebtoken",
+      "ecosystem": "npm",
+      "purl": "pkg:npm/jsonwebtoken"
+     },
+     "ranges": [
+      {
+       "type": "SEMVER",
+       "events": [
+        {
+         "introduced": "0"
+        },
+        {
+         "fixed": "4.2.2"
+        }
+       ]
+      }
+     ],
+     "database_specific": {
+      "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2018/10/GHSA-c7hr-j4mj-j2w6/GHSA-c7hr-j4mj-j2w6.json"
+     }
+    }
+   ],
+   "schema_version": "1.9.0"
+  },
+  {
+   "id": "GHSA-hjrf-2m68-5959",
+   "summary": "jsonwebtoken's insecure implementation of key retrieval function could lead to Forgeable Public/Private Tokens from RSA to HMAC",
+   "details": "# Overview\n\nVersions `<=8.5.1` of `jsonwebtoken` library can be misconfigured so that passing a poorly implemented key retrieval function (referring to the `secretOrPublicKey` argument from the [readme link](https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback)) will result in incorrect verification of tokens. There is a possibility of using a different algorithm and key combination in verification  than the one that was used to sign the tokens. Specifically, tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm. This can lead to successful validation of forged tokens. \n\n# Am I affected?\n\nYou will be affected if your application is supporting usage of both symmetric key and asymmetric key in jwt.verify() implementation with the same key retrieval function. \n\n# How do I fix it?\n \nUpdate to version 9.0.0.\n\n# Will the fix impact my users?\n\nThere is no impact for end users",
+   "aliases": [
+    "CVE-2022-23541"
+   ],
+   "modified": "2024-06-24T21:24:06Z",
+   "published": "2022-12-22T03:33:19Z",
+   "database_specific": {
+    "github_reviewed": true,
+    "github_reviewed_at": "2022-12-22T03:33:19Z",
+    "nvd_published_at": "2022-12-22T18:15:00Z",
+    "cwe_ids": [
+     "CWE-1259",
+     "CWE-287"
+    ],
+    "severity": "MODERATE"
+   },
+   "references": [
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-hjrf-2m68-5959"
+    },
+    {
+     "type": "ADVISORY",
+     "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-23541"
+    },
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3"
+    },
+    {
+     "type": "PACKAGE",
+     "url": "https://github.com/auth0/node-jsonwebtoken"
+    },
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/releases/tag/v9.0.0"
+    },
+    {
+     "type": "WEB",
+     "url": "https://security.netapp.com/advisory/ntap-20240621-0007"
+    }
+   ],
+   "affected": [
+    {
+     "package": {
+      "name": "jsonwebtoken",
+      "ecosystem": "npm",
+      "purl": "pkg:npm/jsonwebtoken"
+     },
+     "ranges": [
+      {
+       "type": "SEMVER",
+       "events": [
+        {
+         "introduced": "0"
+        },
+        {
+         "fixed": "9.0.0"
+        }
+       ]
+      }
+     ],
+     "database_specific": {
+      "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/12/GHSA-hjrf-2m68-5959/GHSA-hjrf-2m68-5959.json",
+      "last_known_affected_version_range": "<= 8.5.1"
+     }
+    }
+   ],
+   "schema_version": "1.9.0",
+   "severity": [
+    {
+     "type": "CVSS_V3",
+     "score": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:L"
+    }
+   ]
+  },
+  {
+   "id": "GHSA-qwph-4952-7xr6",
+   "summary": "jsonwebtoken vulnerable to signature validation bypass due to insecure default algorithm in jwt.verify()",
+   "details": "# Overview\n\nIn versions <=8.5.1 of jsonwebtoken library, lack of algorithm definition and a falsy secret or key in the `jwt.verify()` function can lead to signature validation bypass due to defaulting to the `none` algorithm for signature verification.\n\n# Am I affected?\nYou will be affected if all the following are true in the `jwt.verify()` function:\n- a token with no signature is received\n- no algorithms are specified \n- a falsy (e.g. null, false, undefined) secret or key is passed \n\n# How do I fix it?\n \nUpdate to version 9.0.0 which removes the default support for the none algorithm in the `jwt.verify()` method. \n\n# Will the fix impact my users?\n\nThere will be no impact, if you update to version 9.0.0 and you don\u2019t need to allow for the `none` algorithm. If you need 'none' algorithm, you have to explicitly specify that in `jwt.verify()` options.",
+   "aliases": [
+    "CVE-2022-23540"
+   ],
+   "modified": "2025-02-13T18:33:13Z",
+   "published": "2022-12-22T03:32:59Z",
+   "database_specific": {
+    "github_reviewed": true,
+    "github_reviewed_at": "2022-12-22T03:32:59Z",
+    "nvd_published_at": "2022-12-22T19:15:00Z",
+    "cwe_ids": [
+     "CWE-287",
+     "CWE-327",
+     "CWE-347"
+    ],
+    "severity": "MODERATE"
+   },
+   "references": [
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-qwph-4952-7xr6"
+    },
+    {
+     "type": "ADVISORY",
+     "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-23540"
+    },
+    {
+     "type": "WEB",
+     "url": "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3"
+    },
+    {
+     "type": "PACKAGE",
+     "url": "https://github.com/auth0/node-jsonwebtoken"
+    },
+    {
+     "type": "WEB",
+     "url": "https://security.netapp.com/advisory/ntap-20240621-0007"
+    }
+   ],
+   "affected": [
+    {
+     "package": {
+      "name": "jsonwebtoken",
+      "ecosystem": "npm",
+      "purl": "pkg:npm/jsonwebtoken"
+     },
+     "ranges": [
+      {
+       "type": "SEMVER",
+       "events": [
+        {
+         "introduced": "0"
+        },
+        {
+         "fixed": "9.0.0"
+        }
+       ]
+      }
+     ],
+     "database_specific": {
+      "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/12/GHSA-qwph-4952-7xr6/GHSA-qwph-4952-7xr6.json"
+     }
+    }
+   ],
+   "schema_version": "1.9.0",
+   "severity": [
+    {
+     "type": "CVSS_V3",
+     "score": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:H/A:L"
+    }
+   ]
+  }
+ ]
+}

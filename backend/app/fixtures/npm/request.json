@@ -1,0 +1,28 @@
+{
+ "name": "request",
+ "dist-tags": {
+  "latest": "2.88.2"
+ },
+ "time": {
+  "2.88.2": "2020-02-11T16:35:36.122Z",
+  "created": "2011-01-22T00:36:12.640Z",
+  "modified": "2026-07-17T17:10:13.431Z"
+ },
+ "repository": {
+  "url": "git+https://github.com/request/request.git",
+  "type": "git"
+ },
+ "license": "Apache-2.0",
+ "versions": {
+  "2.88.2": {
+   "version": "2.88.2",
+   "deprecated": "request has been deprecated, see https://github.com/request/request/issues/3142",
+   "license": "Apache-2.0",
+   "repository": {
+    "url": "git+https://github.com/request/request.git",
+    "type": "git"
+   }
+  }
+ },
+ "deprecated_latest": "request has been deprecated, see https://github.com/request/request/issues/3142"
+}
