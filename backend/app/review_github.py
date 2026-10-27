@@ -86,6 +86,11 @@ async def fetch_pull_request(
         diff_response = await client.get(
             f"{GITHUB_API}/repos/{slug}/pulls/{number}", headers=_headers(auth, diff=True)
         )
+        if diff_response.status_code == 403:
+            raise ReviewError(
+                "GitHub refused the diff request (403). This is usually the 60-request/hour "
+                "unauthenticated limit, so set GITHUB_TOKEN to raise it."
+            )
         if diff_response.status_code >= 400:
             raise ReviewError(f"Could not download the diff for {slug}#{number}.")
 

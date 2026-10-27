@@ -33,7 +33,7 @@ index 111..222 100644
 @@ -1,4 +1,8 @@
  const express = require("express");
 -const old = 1;
-+const API_KEY = "sk_live_abcdef1234567890";
++const API_KEY = "Zx9Qm2Lp7Rt4Vb8Nw3Kc6Yd1";
 +eval(userInput);
 +console.log("debug");
 +if (a == b) { doThing(); }
@@ -532,3 +532,90 @@ def test_the_application_runs_without_an_llm() -> None:
     assert settings.llm_configured is False
     # Nothing in the scan/fix path consults llm_configured; only review does.
     from app.pipeline import run_scan  # noqa: F401  (import must not require a key)
+
+# ---------------------------------------------------------------------------
+# review precision
+# ---------------------------------------------------------------------------
+
+
+def test_placeholder_credentials_are_not_reported() -> None:
+    """A test fixture is not a leaked secret; reporting it destroys trust."""
+    from app.review import looks_like_a_real_secret
+
+    for value in [
+        "test-token-value",
+        "example-api-key",
+        "dummy-secret",
+        "your-api-key-here",
+        "changeme",
+        "process.env.TOKEN",
+        "xxxxxxxxxxxxxxxxxxxx",
+        "placeholder",
+    ]:
+        assert looks_like_a_real_secret(value) is False, value
+
+
+def test_real_looking_credentials_are_reported() -> None:
+    from app.review import looks_like_a_real_secret
+
+    # Every value here is fabricated. Provider prefixes are assembled at runtime
+    # so this file never contains a literal that a secret scanner (or GitHub push
+    # protection) would flag as a leaked key.
+    fabricated_prefixes = [
+        "sk_" + "live_",
+        "gh" + "p_",
+        "AK" + "IA",
+    ]
+    body = "A1b2C3d4E5f6G7h8I9j0K1l2"
+
+    for prefix in fabricated_prefixes:
+        assert looks_like_a_real_secret(prefix + body) is True, prefix
+
+    # No prefix, but long and mixed enough that it is not prose.
+    assert looks_like_a_real_secret("Zx9Qm2Lp7Rt4Vb8Nw3Kc6Yd1") is True
+    assert looks_like_a_real_secret("a1b2c3d4e5f6g7h8i9j0k1l2") is True
+
+
+def test_a_placeholder_assignment_produces_no_finding() -> None:
+    patch = (
+        "--- a/test/x.js\n+++ b/test/x.js\n@@ -0,0 +1,2 @@\n"
+        '+const config = { token: "test-token-value" };\n'
+        '+const other = { password: "changeme" };\n'
+    )
+
+    findings = run_rule_agents(parse_patch(patch), [Agent.SECURITY])
+
+    assert findings == []
+
+
+def test_a_real_credential_assignment_is_still_caught() -> None:
+    # Fabricated value: no provider prefix, long and mixed enough to be treated
+    # as a credential rather than prose.
+    fabricated = "Zx9Qm2Lp7Rt4Vb8Nw3Kc6Yd1"
+    patch = (
+        "--- a/src/x.js\n+++ b/src/x.js\n@@ -0,0 +1,1 @@\n"
+        f'+const apiKey = "{fabricated}";\n'
+    )
+
+    findings = run_rule_agents(parse_patch(patch), [Agent.SECURITY])
+
+    assert len(findings) == 1
+    assert findings[0].severity is Severity.CRITICAL
+
+
+def test_context_lines_identify_a_var_based_codebase() -> None:
+    """A patch adding `var` to an all-`var` file must not be nagged about it."""
+    patch = (
+        "--- a/lib/request.js\n+++ b/lib/request.js\n"
+        "@@ -10,6 +10,7 @@\n"
+        " function handle(req) {\n"
+        "   var first = 1;\n"
+        "   var second = 2;\n"
+        "+  var third = 3;\n"
+        "   return first + second;\n"
+        " }\n"
+    )
+
+    findings = run_rule_agents(parse_patch(patch), [Agent.STYLE])
+
+    assert not any("var" in finding.message for finding in findings)

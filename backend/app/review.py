@@ -17,7 +17,7 @@ import logging
 import re
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 from .config import get_settings
 from .llm import LLMClient
@@ -59,6 +59,8 @@ class Finding:
 class ChangedFile:
     path: str
     added_lines: list[tuple[int, str]] = field(default_factory=list)
+    context_lines: list[str] = field(default_factory=list)
+    """Unchanged lines shown in the diff, used to infer the file's conventions."""
     removed: int = 0
     added: int = 0
 
@@ -142,6 +144,7 @@ def parse_patch(patch: str) -> list[ChangedFile]:
         elif raw_line.startswith("-") and not raw_line.startswith("---"):
             current.removed += 1
         elif raw_line.startswith(" "):
+            current.context_lines.append(raw_line[1:])
             new_line += 1
 
     return [f for f in files if f.path and f.path != "/dev/null"]
@@ -164,6 +167,106 @@ class Rule:
     severity: Severity
     message: str
     suggestion: str
+    validator: "Callable[[str], bool] | None" = None
+    """Optional extra check on the matched line, used to cut false positives."""
+
+
+# Assignments that name something credential-like.
+_SECRET_ASSIGNMENT = re.compile(
+    r"""(?i)(?:api[_-]?key|apikey|secret|password|passwd|token|private[_-]?key|access[_-]?key)\s*"""
+    r"""[:=]\s*["'`](?P<value>[^"'`]{8,200})["'`]"""
+)
+
+# Values that are obviously placeholders rather than credentials.
+_PLACEHOLDER_FRAGMENTS = (
+    "test",
+    "example",
+    "dummy",
+    "fake",
+    "sample",
+    "placeholder",
+    "changeme",
+    "change-me",
+    "your-",
+    "your_",
+    "xxxx",
+    "****",
+    "<",
+    ">",
+    "process.env",
+    "redacted",
+)
+
+# Prefixes issued by real providers.
+_SECRET_PREFIXES = (
+    "sk-",
+    "sk_live_",
+    "sk_test_",
+    "ghp_",
+    "gho_",
+    "ghs_",
+    "github_pat_",
+    "xoxb-",
+    "xoxp-",
+    "AKIA",
+    "AIza",
+    "glpat-",
+    "npm_",
+)
+
+
+def looks_like_a_real_secret(value: str) -> bool:
+    """Distinguish a plausible credential from a test fixture or placeholder.
+
+    Reporting `token: "test-token-value"` as a critical finding teaches reviewers
+    to ignore the agent. A real credential is usually issued with a known prefix,
+    or is long and mixed enough that it is not prose.
+    """
+    candidate = value.strip()
+    lowered = candidate.lower()
+
+    if any(fragment in lowered for fragment in _PLACEHOLDER_FRAGMENTS):
+        return False
+    if any(candidate.startswith(prefix) for prefix in _SECRET_PREFIXES):
+        return True
+
+    # Fall back to shape: long, no spaces, and mixed character classes.
+    if len(candidate) < 24 or " " in candidate:
+        return False
+    has_letter = any(char.isalpha() for char in candidate)
+    has_digit = any(char.isdigit() for char in candidate)
+    return has_letter and has_digit
+
+
+# A rule that fires only when a more specific rule has not already described the
+# same line.
+_SUPPRESSED_BY: dict[str, str] = {
+    "no-provider-token": "no-hardcoded-secret",
+}
+
+
+def _secret_validator(line: str) -> bool:
+    for match in _SECRET_ASSIGNMENT.finditer(line):
+        if looks_like_a_real_secret(match.group("value")):
+            return True
+    return False
+
+
+_QUOTED_VALUE = re.compile(r"""["'`](?P<value>[^"'`]{8,200})["'`]""")
+
+# A literal carrying a provider-issued prefix is a credential regardless of the
+# variable it is assigned to.
+_PROVIDER_TOKEN = re.compile(
+    r"""["'`](?P<value>(?:sk-|sk_live_|sk_test_|ghp_|gho_|ghs_|github_pat_|xoxb-|xoxp-|AKIA|AIza|glpat-|npm_)"""
+    r"""[A-Za-z0-9_\-]{8,})["'`]"""
+)
+
+
+def _prefix_validator(line: str) -> bool:
+    for match in _QUOTED_VALUE.finditer(line):
+        if looks_like_a_real_secret(match.group("value")):
+            return True
+    return False
 
 
 _SECURITY_RULES: list[Rule] = [
@@ -171,7 +274,8 @@ _SECURITY_RULES: list[Rule] = [
     Rule("no-shell-exec", re.compile(r"\bexecSync\s*\(|\bexec\s*\("), Severity.HIGH, "Shell execution with a constructed command can allow command injection.", "Use `execFile`/`spawn` with an argument list and validate input."),
     Rule("no-dangerous-html", re.compile(r"dangerouslySetInnerHTML"), Severity.HIGH, "Raw HTML injection into React can allow XSS.", "Sanitise the HTML or render text instead."),
     Rule("no-inner-html", re.compile(r"\.innerHTML\s*="), Severity.MEDIUM, "Assigning to `innerHTML` can introduce XSS.", "Use `textContent` or a sanitiser."),
-    Rule("no-hardcoded-secret", re.compile(r"(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*['\"][A-Za-z0-9_\-]{12,}['\"]"), Severity.CRITICAL, "A credential-like literal appears to be hardcoded.", "Move the value to an environment variable and rotate it."),
+    Rule("no-hardcoded-secret", _SECRET_ASSIGNMENT, Severity.CRITICAL, "A credential-like literal appears to be hardcoded.", "Move the value to an environment variable and rotate it.", _secret_validator),
+    Rule("no-provider-token", _PROVIDER_TOKEN, Severity.CRITICAL, "A string with a credential provider's prefix appears to be committed.", "Revoke and rotate it, then load it from the environment.", _prefix_validator),
     Rule("no-tls-disable", re.compile(r"rejectUnauthorized\s*:\s*false"), Severity.HIGH, "TLS certificate validation is disabled.", "Remove the override; never disable certificate verification."),
     Rule("no-weak-hash", re.compile(r"(?i)createHash\(\s*['\"](md5|sha1)['\"]"), Severity.MEDIUM, "A weak hash algorithm is used.", "Use SHA-256 or a password-specific KDF."),
     Rule("no-plaintext-http", re.compile(r"\bhttp://(?!localhost|127\.0\.0\.1)"), Severity.LOW, "A plaintext HTTP URL is used.", "Use HTTPS."),
@@ -204,24 +308,29 @@ _AGENT_RULES: dict[Agent, list[Rule]] = {
 
 
 def detect_conventions(changed: ChangedFile) -> set[str]:
-    """Infer a file's own conventions from the lines it adds.
+    """Infer a file's own conventions from the lines around the change.
 
-    A style rule that contradicts what the file already does is suppressed: this
-    agent checks a change against *the repository's* conventions, not against a
-    house style the project never adopted.
+    Both the added lines and the surrounding context are used: a diff hunk shows
+    the code the change lives in, and a repository that writes `var` throughout
+    should not be told to stop just because a patch added three `var` lines to
+    it. Style rules that contradict the file are suppressed.
     """
     suppressed: set[str] = set()
-    lines = [text for _, text in changed.added_lines]
-    if not lines:
+    added = [text for _, text in changed.added_lines]
+    if not added:
         return suppressed
 
-    var_lines = sum(1 for text in lines if re.search(r"\bvar\s+[A-Za-z_$]", text))
-    declaration_lines = sum(1 for text in lines if re.search(r"\b(const|let|var)\s+[A-Za-z_$]", text))
+    # Context is weighted less than the lines actually being changed, so a single
+    # stray context line cannot override a deliberate, consistent change.
+    sample = added + changed.context_lines
+
+    var_lines = sum(1 for text in sample if re.search(r"\bvar\s+[A-Za-z_$]", text))
+    declaration_lines = sum(1 for text in sample if re.search(r"\b(const|let|var)\s+[A-Za-z_$]", text))
     if declaration_lines >= 3 and var_lines / declaration_lines > 0.6:
         suppressed.add("prefer-const")
 
-    loose = sum(1 for text in lines if _LOOSE_EQUALITY.search(text))
-    strict = sum(1 for text in lines if _STRICT_EQUALITY.search(text))
+    loose = sum(1 for text in sample if _LOOSE_EQUALITY.search(text))
+    strict = sum(1 for text in sample if _STRICT_EQUALITY.search(text))
     if loose + strict >= 4 and loose / (loose + strict) > 0.6:
         suppressed.add("prefer-strict-equality")
 
@@ -235,11 +344,19 @@ def run_rule_agents(files: Iterable[ChangedFile], agents: Iterable[Agent]) -> li
     for changed in files:
         suppressed = detect_conventions(changed)
         for line_number, text in changed.added_lines:
+            fired: set[str] = set()
             for agent in agent_list:
                 for rule in _AGENT_RULES.get(agent, []):
                     if rule.id in suppressed:
                         continue
+                    # Two rules describing the same leak on one line produce one
+                    # finding, not two: the more specific rule wins.
+                    if _SUPPRESSED_BY.get(rule.id) in fired:
+                        continue
                     if rule.pattern.search(text):
+                        if rule.validator is not None and not rule.validator(text):
+                            continue
+                        fired.add(rule.id)
                         findings.append(
                             Finding(
                                 agent=agent,
